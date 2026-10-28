@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name:  router-deployment
   labels:
-    app: router
+    name: router-deployment
 spec:
   replicas: 1
   selector:
