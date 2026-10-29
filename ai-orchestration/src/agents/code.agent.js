@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const model = new ChatGoogle({
-    model: "gemini-3.1-flash-lite",
+    model: "gemini-3.5-flash-lite",
     apiKey: process.env.GEMINI_KEY,
     temperature: 0,   
 });
@@ -156,18 +156,3 @@ const agent = createAgent({
 });
 
 export default agent;
-// const result = await agent.invoke({
-//     messages: [
-//         {
-//             role: "user",
-//     content: `Create a simple mario sort of game in the project using React and CSS.
-
-// First, use list_files to inspect the project.
-// Then, use read_files to read the relevant existing files.
-// Finally, use update_files to write the changes.
-// Actually call the tools and save the code.`,
-//         },
-//     ],
-// });
-
-// console.log("FINAL AGENT RESULT:", result);
