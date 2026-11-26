@@ -1,0 +1,54 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-deployment
+  labels:
+    name: ai-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ai-server
+  template:
+    metadata:
+      labels:
+        app: ai-server
+    spec:
+      containers:
+      - image: ai-orchestration
+        name: ai-container
+        imagePullPolicy: IfNotPresent
+
+        env:
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ai-secret
+              key: GEMINI_API_KEY
+
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "1Gi"
+          requests:
+            cpu: "250m"
+            memory: "500Mi"
+
+        livenessProbe:
+          httpGet:
+            path: /api/status/healthz
+            port: 3000
+          initialDelaySeconds: 90
+          timeoutSeconds: 10
+
+        readinessProbe:
+          httpGet:
+            path: /api/status/healthz
+            port: 3000
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+
+        ports:
+        - containerPort: 3000
+          name: ai-port
