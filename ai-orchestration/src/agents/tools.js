@@ -34,15 +34,16 @@ const handleToolError = (toolName, error) => {
 
 // LIST FILES TOOL
 export const listFilesTool = tool(
-  async ({}) => {
+  async ({},config) => {
     try {
-      console.log("Using listFilesTool...");
-
+       const writer = config.writer;
+       writer("Listing files...\n");    
+  
       const result = await axios.get(
-        "http://sandbox-service-01a2168a-b944-70c9-995e-6b8d66873031:3000/list-files"
+        `http://sandbox-service-${config.context.projectId}:3000/list-files`
       );
 
-      console.log("Files fetched:", result.data.file);
+      writer("Listed files successfully.\n"+"Files: " + result.data.file.join(", ") + "\n");
 
       return JSON.stringify({
         success: true,
@@ -62,13 +63,14 @@ export const listFilesTool = tool(
 
 // READ FILES TOOL
 export const readFilesTool = tool(
-  async ({ files }) => {
+  async ({ files }, config) => {
     try {
-      console.log("Using readFilesTool...");
-      console.log("Files:", files);
+      const writer = config.writer;
+      writer("Reading files...\n");
+      writer("Files: " + files.join(", ") + "\n");
 
       const result = await axios.get(
-        "http://sandbox-service-01a2168a-b944-70c9-995e-6b8d66873031:3000/read-files",
+        `http://sandbox-service-${config.context.projectId}:3000/read-files`,
         {
           params: {
             files: files.join(","),
@@ -76,7 +78,12 @@ export const readFilesTool = tool(
         }
       );
 
-      console.log("File contents:", result.data.result);
+      writer(
+  "File contents: " +
+  JSON.stringify(result.data.result, null, 2) +
+  "\n"
+);
+      writer("Read files successfully.\n");
 
       return JSON.stringify({
         success: true,
@@ -100,19 +107,20 @@ export const readFilesTool = tool(
 
 // UPDATE FILES TOOL
 export const updateFilesTool = tool(
-  async ({ files }) => {
+  async ({ files }, config) => {
     try {
-      console.log("Using updateFilesTool...");
-      console.log("Updates:", files);
+      const writer = config.writer
+      writer("Updating files..."+files.map(f => f.file).join(", ") + "\n");
 
       const result = await axios.patch(
-        "http://sandbox-service-01a2168a-b944-70c9-995e-6b8d66873031:3000/update-files",
+        `http://sandbox-service-${config.context.projectId}:3000/update-files`,
         {
           updates: files,
         }
       );
 
-      console.log("Files updated:", result.data.result);
+      writer("Files updated: "+JSON.stringify(result.data.result, null, 2) + "\n");
+      writer("Updated files successfully.\n");
 
       return JSON.stringify({
         success: true,

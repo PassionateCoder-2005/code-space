@@ -4,7 +4,7 @@ import { listFilesTool, readFilesTool, updateFilesTool } from "./tools.js";
 import dotenv from "dotenv";
 dotenv.config();
 const model = new ChatGoogle({
-    model:"gemini-3.5-flash",
+    model:"gemini-3.1-flash-lite",
     apiKey: process.env.GEMINI_API_KEY,
 });
 
